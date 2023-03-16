@@ -10,18 +10,35 @@ function App() {
   const [qrCode, setQrCode] = useState(null);
 
   function onGenerate() {
+    if (value !== ""){
     <br />
     setQrCode(
       <QRCode
-        title="GeeksForGeeks"
+        title="Deepak"
         value={value}
         bgColor={back}
         fgColor={fore}
         size={size === '' ? 0 : size}
       />
     );
+    }else{
+      setQrCode(null);
+    }
   }
 
+  function downloadQRCode() {
+    if (qrCode !== null) {
+      const canvas = document.getElementById('qr-code');
+      const pngUrl = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.href = pngUrl;
+      downloadLink.download = 'qr-code.png';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
+  }
+  
   return (
     <div className="App">
       <center>
@@ -62,20 +79,34 @@ function App() {
           />
           <br />
           <br />
-          <button 
-          className='my-button'
-          type="submit" 
-          onClick={onGenerate}>
+          <button
+            className='my-button'
+            type="submit"
+            onClick={onGenerate}
+          >
             Generate
           </button>
           <br />
           <br />
           <br />
         </div>
-        {qrCode && <div>{qrCode}</div>}
+        {qrCode && (
+          <div>
+            {qrCode}
+            <br />
+            <br />
+            <button
+              className='my-button'
+              onClick= {downloadQRCode}
+            >
+              Download QR Code
+            </button>
+          </div>
+        )}
       </center>
     </div>
   );
-}
+  
+  }
 
 export default App;

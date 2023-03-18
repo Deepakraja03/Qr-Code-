@@ -8,21 +8,24 @@ function App() {
   const [fore, setFore] = useState('#000000');
   const [size, setSize] = useState(256);
   const [qrCode, setQrCode] = useState(null);
+  const [generated, setGenerated] = useState(false);
 
   function onGenerate() {
     if (value !== ""){
-    <br />
-    setQrCode(
-      <QRCode
-        title="Deepak"
-        value={value}
-        bgColor={back}
-        fgColor={fore}
-        size={size === '' ? 0 : size}
-      />
-    );
-    }else{
+      setQrCode(
+        <QRCode
+          title={value}
+          value={value}
+          bgColor={back}
+          fgColor={fore}
+          size={size === '' ? 0 : size}
+        />
+      );
+      setGenerated(true);
+    } else {
+      alert("Value not mentioned");
       setQrCode(null);
+      setGenerated(false);
     }
   }
 
@@ -38,13 +41,13 @@ function App() {
       document.body.removeChild(downloadLink);
     }
   }
-  
+
   return (
     <div className="App">
       <center>
         <br />
         <br />
-        <div className="container">
+        <div className={generated ? 'container generated' : 'container'}>
           <input
             id="qr"
             type="text"
@@ -91,13 +94,13 @@ function App() {
           <br />
         </div>
         {qrCode && (
-          <div>
+          <div className='qr-container'>
             {qrCode}
             <br />
             <br />
             <button
               className='my-button'
-              onClick= {downloadQRCode}
+              onClick={downloadQRCode}
             >
               Download QR Code
             </button>
@@ -106,7 +109,6 @@ function App() {
       </center>
     </div>
   );
-  
-  }
+}
 
 export default App;

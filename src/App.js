@@ -1,8 +1,14 @@
 import { useState } from 'react';
 import QRCode from 'react-qr-code';
 import './App.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+
+  const notify = () => toast("QR Code is successfully generated!");
+
+
   const [value, setValue] = useState('');
   const [back, setBack] = useState('#FFFFFF');
   const [fore, setFore] = useState('#000000');
@@ -31,7 +37,7 @@ function App() {
 
   function downloadQRCode() {
     if (qrCode !== null) {
-      const canvas = document.getElementById('qr-code');
+      const canvas = document.getElementsByClassName('qr-container');
       const pngUrl = canvas.toDataURL('image/png');
       const downloadLink = document.createElement('a');
       downloadLink.href = pngUrl;
@@ -85,9 +91,10 @@ function App() {
           <button
             className='my-button'
             type="submit"
-            onClick={onGenerate}
+            onClick={()=> { onGenerate(); notify();}}
           >
             Generate
+        <ToastContainer />
           </button>
           <br />
           <br />

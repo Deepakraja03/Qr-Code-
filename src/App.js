@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import QRCode from 'react-qr-code';
+import QRCode from 'qrcode.react';
+import html2canvas from 'html2canvas';
 import './App.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-
   const notify = () => toast("QR Code is successfully generated!");
-
 
   const [value, setValue] = useState('');
   const [back, setBack] = useState('#FFFFFF');
@@ -17,7 +16,7 @@ function App() {
   const [generated, setGenerated] = useState(false);
 
   function onGenerate() {
-    if (value !== ""){
+    if (value !== "") {
       setQrCode(
         <QRCode
           title={value}
@@ -25,6 +24,7 @@ function App() {
           bgColor={back}
           fgColor={fore}
           size={size === '' ? 0 : size}
+          ref={(ref) => { setQrCode(ref); }} // Add this line to set ref
         />
       );
       setGenerated(true);
@@ -34,19 +34,19 @@ function App() {
       setGenerated(false);
     }
   }
+  
 
-  function downloadQRCode() {
-    if (qrCode !== null) {
-      const canvas = document.getElementsByClassName('qr-container');
-      const pngUrl = canvas.toDataURL('image/png');
-      const downloadLink = document.createElement('a');
-      downloadLink.href = pngUrl;
-      downloadLink.download = 'qr-code.png';
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
+  const downloadQRCode = () => {
+    if (qrCode) {
+      html2canvas(qrCode).then(canvas => { // Update this line to use qrCode ref
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL();
+        link.download = 'qrcode.png';
+        link.click();
+      });
     }
   }
+  
 
   return (
     <div className="App">
@@ -88,14 +88,15 @@ function App() {
           />
           <br />
           <br />
-          <button
-            className='my-button'
-            type="submit"
-            onClick={()=> { onGenerate(); notify();}}
-          >
-            Generate
-        <ToastContainer />
-          </button>
+            <button
+              className='my-button'
+              type="submit"
+              onClick={()=> { onGenerate(); notify();}}
+              >
+                Generate
+            </button>
+          <ToastContainer />
+
           <br />
           <br />
           <br />
